@@ -1,6 +1,5 @@
 import pandas as pd
-import numpy as np
-from typing import Dict, Optional
+from typing import Dict
 from sklearn.impute import KNNImputer
 from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
 from sklearn.preprocessing import LabelEncoder

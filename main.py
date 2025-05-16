@@ -14,8 +14,22 @@ if __name__ == "__main__":
 
     # Step 2: Feature selection and engineering
     fe = FeatureEngineering(data)
-    data = fe.select_features()
+    data = fe.select_features(exclude=['Id'])
     data = fe.engineer_features()
+    print("\nEngineered Features:")
+    print(fe.get_feature_descriptions())
+    print("\nSample Data:")
+    print(data[['sepal_ratio', 'petal_area', 'Species_encoded']].head())
+
+    # Step 2b: Feature scaling (standardization)
+    data = fe.scale_features(method='standard')
+    print("\nScaled Features Summary:")
+    # Only print columns that exist after scaling
+    scaled_cols = [col for col in ['SepalLengthCm', 'SepalWidthCm', 'PetalLengthCm', 'PetalWidthCm', 'sepal_ratio', 'petal_ratio'] if col in data.columns]
+    print(data[scaled_cols].describe().round(2))
+    print("\nSample Data After Scaling:")
+    sample_cols = [col for col in ['sepal_ratio', 'petal_area', 'Species_encoded'] if col in data.columns]
+    print(data[sample_cols].head())
 
     # Step 3: Data integrity and consistency
     integrity = DataIntegrity(data)
@@ -25,11 +39,11 @@ if __name__ == "__main__":
 
     # Step 4: Outlier detection and handling
     outlier_handler = OutlierHandler(data)
-    outlier_report = outlier_handler.detect(method='zscore', group_by='Species')
-    print("\nOutlier Report (by Species, Z-score):", outlier_report)
-    # Remove outliers (optional, can use 'cap' or 'impute' as well)
-    data = outlier_handler.handle(strategy='remove', method='zscore')
-    print("Data shape after outlier removal:", data.shape)
+    outlier_report = outlier_handler.detect(method='iqr', group_by='Species')
+    print("\nOutlier Report (by Species, IQR):", outlier_report)
+    # Remove/cap outliers (optional, can use 'remove', 'cap', or 'impute')
+    data = outlier_handler.handle(strategy='cap', method='iqr')
+    print("Data shape after outlier handling:", data.shape)
 
     # Step 5: Summary statistics and insights
     stats = SummaryStats(data)
