@@ -52,8 +52,7 @@ if __name__ == "__main__":
 
     # Step 6: Pattern analysis
     patterns = PatternAnalysis(data)
-    patterns.identify_patterns()
-    patterns.find_trends_anomalies()
+    patterns.print_patterns()
 
     # Step 7: Visualization
     viz = Visualization(data)
